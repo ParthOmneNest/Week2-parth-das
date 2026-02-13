@@ -1,0 +1,23 @@
+export const data=[
+  {"id": "a9b8c7d6", "name": "Alpha", "passed": true, "score": 85},
+  {"id": "b8c7d6e5", "name": "Beta", "passed": false, "score": 42},
+  {"id": "c7d6e5f4", "name": "Gamma", "passed": true, "score": 91},
+  {"id": "d6e5f4g3", "name": "Delta", "passed": true, "score": 77},
+  {"id": "e5f4g3h2", "name": "Epsilon", "passed": false, "score": 60},
+  {"id": "f4g3h2i1", "name": "Zeta", "passed": true, "score": 88},
+  {"id": "g3h2i1j0", "name": "Eta", "passed": false, "score": 33},
+  {"id": "h2i1j0k9", "name": "Theta", "passed": true, "score": 95},
+  {"id": "i1j0k9l8", "name": "Iota", "passed": true, "score": 70},
+  {"id": "j0k9l8m7", "name": "Kappa", "passed": false, "score": 55},
+  {"id": "k9l8m7n6", "name": "Lambda", "passed": true, "score": 82},
+  {"id": "l8m7n6o5", "name": "Mu", "passed": true, "score": 99},
+  {"id": "m7n6o5p4", "name": "Nu", "passed": false, "score": 25},
+  {"id": "n6o5p4q3", "name": "Xi", "passed": true, "score": 74},
+  {"id": "o5p4q3r2", "name": "Omicron", "passed": true, "score": 68},
+  {"id": "p4q3r2s1", "name": "Pi", "passed": false, "score": 40},
+  {"id": "q3r2s1t0", "name": "Rho", "passed": true, "score": 81},
+  {"id": "r2s1t0u9", "name": "Sigma", "passed": true, "score": 93},
+  {"id": "s1t0u9v8", "name": "Tau", "passed": false, "score": 50},
+  {"id": "t0u9v8w7", "name": "Upsilon", "passed": true, "score": 87},
+  {"id": "t0u938s7", "name": "Vermillion", "passed": false, "score": 17}
+]
