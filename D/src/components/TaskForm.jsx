@@ -29,10 +29,13 @@ export const TaskForm = ()=>{
             const index = updatedTasks.findIndex(task => task.id === id);
 
                 if (index !== -1) {
-                updatedTasks[index] = { 
-                    ...updatedTasks[index], 
-                    isCompleted: !updatedTasks[index].isCompleted 
+                const targetTask= updatedTasks[index]
+
+                const newTask={
+                    ...targetTask,
+                    isCompleted:!targetTask.isCompleted
                 }
+                updatedTasks[index]=newTask
             }
             return updatedTasks
         })
@@ -47,7 +50,6 @@ export const TaskForm = ()=>{
             <TaskList
             tasks={tasks}
             onToggle={toggleTask}
-
             />
 
             <button type="submit">Add a Task</button> 
