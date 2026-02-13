@@ -1,0 +1,41 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;           
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.task-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.completed-text {
+    text-decoration: line-through;
+    color: #888;
+}
+
+@media (max-width: 480px) {
+    .task-item {
+        font-size: 0.9rem;
+    }
+    
+    button {
+        padding: 5px;
+    }
+}

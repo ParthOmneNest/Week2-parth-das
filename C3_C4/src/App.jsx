@@ -6,7 +6,7 @@ import { LoginStatus } from './component/LoginStatus'
 import { DashboardWrapper } from './component/DashboardWrapper'
 
 function App() {
-  const [isLoading,setIsLoading]=useState(false)
+  const [isLoading,setIsLoading] = useState(false)
     const handleClick=()=>{
       setIsLoading(prev=>!prev)
     }
