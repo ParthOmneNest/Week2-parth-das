@@ -1,4 +1,4 @@
-- Folder- Fin_Trading folder here(Main Project)
+- Folder- Fin_Trading folder(Main Project)
 - - Ignore the rest of files they are assignments given previously
 - Day 1 done on 16th Feb created the Auth for portfolio
-- Day 2 on 17th Feb creating Products Card here
+- Day 2 on 17th Feb created Products Card and implemented the Card Logic 
