@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import { ProductCard } from './ProductCard'
 
-export const ProductList=({onViewDetails})=>{
+export const ProductList=({onViewDetails,search})=>{
     const[products,setProducts]= useState([])
     const[loading,setLoading]= useState(false)
     const[error,setError]= useState(null)
@@ -55,6 +55,15 @@ export const ProductList=({onViewDetails})=>{
             </div>
         )
     }
+
+    // Added the filter logic here for search button and mapping based on new filtered products
+    const filteredProducts=products.filter((product)=>{
+        const searchCase=(search||'').toLowerCase()
+        const titleMatch=product.title.toLowerCase().includes(searchCase)
+        const descMatch=product.description.toLowerCase().includes(searchCase)
+        const catMatch=product.category.toLowerCase().includes(searchCase)
+        return titleMatch || descMatch || catMatch
+    })
     return(
         <div style={{padding:'20px',maxWidth:'1200px',margin:'0 auto'}}>
             <h1>Product Store</h1>
@@ -104,7 +113,7 @@ export const ProductList=({onViewDetails})=>{
                 gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))',
                 gap:'20px'
             }}>
-                {products.map(product=>(
+                {filteredProducts.map(product=>(
                     <ProductCard 
                     key={product.id}
                     product={product}

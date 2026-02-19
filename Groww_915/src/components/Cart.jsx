@@ -1,4 +1,5 @@
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishListContext';
 import {CartItem} from './CartItem';
 
 export const Cart=({ onClose })=> {
@@ -9,7 +10,7 @@ export const Cart=({ onClose })=> {
     clearCart,
     getCartTotal 
   } = useCart();
-
+  const { wishlist } = useWishlist();
   if (cartItems.length === 0) {
     return (
       <div style={{
@@ -149,7 +150,11 @@ export const Cart=({ onClose })=> {
         >
           Proceed to Checkout
         </button>
-
+          <div style={{ fontSize: '14px', color: '#555' }}>
+          {wishlist.length > 0 
+            ? `❤️ ${wishlist.length} items saved in Wish List` 
+            : '🤍 Wishlist empty'}
+        </div>
         <button
           onClick={clearCart}
           style={{

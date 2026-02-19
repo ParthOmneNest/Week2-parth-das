@@ -4,15 +4,21 @@ import {Navbar} from './components/Navbar';
 import {ProductList} from './components/ProductList';
 import {ProductDetail} from './components/ProductDetail';
 import {Cart} from './components/Cart';
+import SearchBar from './components/SearchBar';
 
 function App() {
   const [currentView, setCurrentView] = useState('products');
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [search, setSearch] = useState('');
   const { addToCart } = useCart();
 
   const handleViewDetails = (productId) => {
     setSelectedProductId(productId);
     setCurrentView('detail');
+  };
+  const handleSearch = (e) => {
+    setSearch(e);
+    setCurrentView('products');
   };
 
   const handleBackToProducts = () => {
@@ -31,9 +37,11 @@ const handleAddToCart = (product) => {
   return (
     <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
       <Navbar onViewCart={handleViewCart} />
-      
+      <SearchBar handleSearch={handleSearch}/>
       {currentView === 'products' && (
-        <ProductList onViewDetails={handleViewDetails} />
+        <ProductList 
+        onViewDetails={handleViewDetails}
+        search={search} />
       )}
       
       {currentView === 'detail' && (

@@ -1,4 +1,13 @@
+import { useWishlist } from "../context/WishListContext";
+
 export const ProductCard=({product,onViewDetails})=>{
+   const { toggleWishlist, isInWishlist } = useWishlist();
+    const isLiked = isInWishlist(product.id);
+
+    const handleWishList=(e)=>{
+      e.stopPropagation() // stops the click from reaching the card
+      toggleWishlist(product.id)
+    }
   return (
         <div style={{
           border: '1px solid #ddd',
@@ -56,6 +65,9 @@ export const ProductCard=({product,onViewDetails})=>{
           }}>
             ${product.price}
           </p>
+            <button style={ {cursor:'default'}} onClick={handleWishList}>
+                {isLiked ? '❤️ Remove' : '🤍 Add to Wishlist'}
+            </button>
         </div>
         )
     }

@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useWishlist } from '../context/WishListContext';
 
 export const ProductDetail=({ productId, onBack, onAddToCart })=> {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+     const { toggleWishlist, isInWishlist } = useWishlist();
+      const isLiked = isInWishlist(productId);
+  
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -175,9 +179,14 @@ export const ProductDetail=({ productId, onBack, onAddToCart })=> {
             }}
             onMouseOver={(e) => e.target.style.background = '#0052a3'}
             onMouseOut={(e) => e.target.style.background = '#0066cc'}
-          >
+            >
             🛒 Add to Cart
           </button>
+            
+              <button style={{cursor:'default'}} onClick={()=> toggleWishlist(productId)}>
+                  {isLiked?'❤️Remove ' : '🤍 Add to WishList '}
+            </button>
+
         </div>
       </div>
     </div>
