@@ -1,12 +1,18 @@
 import { useWishlist } from "../context/WishListContext";
-
+import { useToggle } from "../hooks/useToggle";
 export const ProductCard=({product,onViewDetails})=>{
    const { toggleWishlist, isInWishlist } = useWishlist();
     const isLiked = isInWishlist(product.id);
 
+    const [showDesc,setShowDesc]=useToggle(false);
+
     const handleWishList=(e)=>{
       e.stopPropagation() // stops the click from reaching the card
       toggleWishlist(product.id)
+    }
+    const handleToggle=(e)=>{
+      e.stopPropagation()
+      setShowDesc()
     }
   return (
         <div style={{
@@ -28,6 +34,13 @@ export const ProductCard=({product,onViewDetails})=>{
         
         onClick={() => onViewDetails(product.id)}
         >
+          {/* Added the description button using custom hook useToggle */}
+          <button onClick={handleToggle} 
+          style={{fontSize:'17px',cursor:'pointer'}}>
+            {showDesc ? '▲ Hide Description' : '▼ Show Description'}
+          </button>
+          {showDesc && <p style={{fontSize:'17px',color:'blue'}}>{product.description}</p>}
+
           <img
             src={product.image}
             alt={product.title}

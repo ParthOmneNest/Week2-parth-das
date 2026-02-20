@@ -1,126 +1,109 @@
-import {useState, useEffect} from 'react'
-import { ProductCard } from './ProductCard'
+import { useEffect, useState } from "react";
+import { useProductFilters } from "../hooks/useProductFilters";
+import { useWindowSize } from "../hooks/useWindowSize";
+import { FilterBar } from "./FilterBar";
+import { ProductCard } from "./ProductCard";
 
-export const ProductList=({onViewDetails,search})=>{
-    const[products,setProducts]= useState([])
-    const[loading,setLoading]= useState(false)
-    const[error,setError]= useState(null)
-    const[categories,setCategories]= useState([])
-    const[selectedCategory,setSelectedCategory]= useState('all')
+export const ProductList = ({ onViewDetails, search }) => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
 
-    // fetch categories
-    useEffect(()=>{
-        fetch('https://fakestoreapi.com/products/categories')
-        .then(res=>res.json())
-        .then(data=>setCategories(data))
-        .catch(err=>console.log('Error: ',err))
-    },[])
-    
-    // fetch products
-    useEffect(()=>{
-        setLoading(true)
-        setError(null)
+  // 1. First, filter by SearchTerm
+  const searchFilteredProducts = products.filter((product) => {
+    const searchCase = (search || "").toLowerCase();
+    return (
+      product.title.toLowerCase().includes(searchCase) ||
+      product.description.toLowerCase().includes(searchCase) ||
+      product.category.toLowerCase().includes(searchCase)
+    );
+  });
 
-        const url= selectedCategory==='all'
-        ? 'https://fakestoreapi.com/products'
-        : `https://fakestoreapi.com/products/category/${selectedCategory}`
+  // 2. Then, pass search-filtered results into useProductFilters for Category, Price, and Sorting
+  const { filters, setFilter, sortedProducts, resetFilters } =
+    useProductFilters(searchFilteredProducts);
 
-        fetch(url)
-        .then(res=>{
-            if(!res.ok) throw new Error('Failed to fetch');
-            return res.json()
-        })
-        .then(data=>{
-            setProducts(data)
-            setLoading(false)
-        })
-        .catch(err=>{
-            setError(err.message)
-            // console.log(err.message)
-            setLoading(false)
-        })
-    },[selectedCategory])
+  // Added the useWindowSize hook here
+  const { width } = useWindowSize();
 
-    if(loading){
-        return(
-            <div style={{padding:'40px',textAlign:'center'}}>
-                <h2>Loading Products...</h2>
-            </div>
-        )
-    }
-    if(error){
-        return(
-            <div style={{padding:'40px',textAlign:'center',color:'red'}}>
-                <h2>Error: {error}</h2>
-            </div>
-        )
-    }
+  // Decide columns based on screen width
+  const getGridColumns = () => {
+    if (width < 480) return "1fr";
+    else if (width >= 480 && width < 768) return "2fr 2fr";
+    else if (width >= 768 && width < 1024) return "2fr 2fr 2fr";
+    else return "repeat(4,1fr)";
+  };
+  // fetch categories
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products/categories")
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch((err) => console.log("Error: ", err));
+  }, []);
 
-    // Added the filter logic here for search button and mapping based on new filtered products
-    const filteredProducts=products.filter((product)=>{
-        const searchCase=(search||'').toLowerCase()
-        const titleMatch=product.title.toLowerCase().includes(searchCase)
-        const descMatch=product.description.toLowerCase().includes(searchCase)
-        const catMatch=product.category.toLowerCase().includes(searchCase)
-        return titleMatch || descMatch || catMatch
-    })
-    return(
-        <div style={{padding:'20px',maxWidth:'1200px',margin:'0 auto'}}>
-            <h1>Product Store</h1>
+  // Fetch all products once
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
 
-            {/* Show all Category Button */}
-            <div style={{
-                display:'flex',
-                gap:'10px',
-                marginBottom:'20px',
-                flexWrap:'wrap'
-            }}>
-                <button 
-                onClick={()=>setSelectedCategory('all')}
-                style={{
-                    padding:'10px 20px',
-                    background: selectedCategory==='all'?'#0066cc':'white',
-                    color:selectedCategory==='all'?'white':'#0066cc',
-                    border:'2px solid #0066cc',
-                    borderRadius:'20px',
-                    cursor:'pointer',
-                    fontWeight:'bold'
-                }}>
-                    All Products
-                </button>
+  if (loading) {
+    return (
+      <div style={{ padding: "40px", textAlign: "center" }}>
+        <h2>Loading Products...</h2>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div style={{ padding: "40px", textAlign: "center", color: "red" }}>
+        <h2>Error: {error}</h2>
+      </div>
+    );
+  }
 
-                {categories.map((cat)=>(
-                    <button key={cat}
-                    onClick={()=>setSelectedCategory(cat)}
-                    style={{
-                        padding:'10px 20px',
-                        background: selectedCategory===cat?'#0066cc':'white',
-                        color:selectedCategory===cat?'white':'#0066cc',
-                        border:'2px solid #0066cc',
-                        borderRadius:'20px',
-                        cursor:'pointer',
-                        fontWeight:'bold',
-                        textTransform:'center'
-                    }}>
-                        {cat}
-                    </button>
-                ))}
+  return (
+    <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
+      <h1>Product Store</h1>
 
-            </div>
-            {/* Product Grid */}
-            <div style={{
-                display:'grid',
-                gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))',
-                gap:'20px'
-            }}>
-                {filteredProducts.map(product=>(
-                    <ProductCard 
-                    key={product.id}
-                    product={product}
-                    onViewDetails={onViewDetails}
-                    />
-                ))}
-            </div>
-        </div>
-    )
-}
+      {/* Filter Bar — replaces old category buttons */}
+      <FilterBar
+        filters={filters}
+        setFilter={setFilter}
+        resetFilters={resetFilters}
+        categories={categories}
+      />
+
+      {/* Results Count */}
+      <p style={{ color: "#666", marginBottom: "15px" }}>
+        Showing {sortedProducts.length} of {products.length} products
+      </p>
+
+      {/* Product Grid */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: getGridColumns(),
+          gap: "20px",
+        }}
+      >
+        {sortedProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            onViewDetails={onViewDetails}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};

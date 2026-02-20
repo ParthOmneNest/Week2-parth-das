@@ -1,65 +1,60 @@
-import { useState } from 'react';
-import { useCart } from './context/CartContext';
-import {Navbar} from './components/Navbar';
-import {ProductList} from './components/ProductList';
-import {ProductDetail} from './components/ProductDetail';
-import {Cart} from './components/Cart';
-import SearchBar from './components/SearchBar';
+import { useState } from "react";
+import { Cart } from "./components/Cart";
+import { Navbar } from "./components/Navbar";
+import { ProductDetail } from "./components/ProductDetail";
+import { ProductList } from "./components/ProductList";
+import SearchBar from "./components/SearchBar";
+import { useCart } from "./context/CartContext";
+import { BackToTop } from "./components/BackToTop";
 
 function App() {
-  const [currentView, setCurrentView] = useState('products');
+  const [currentView, setCurrentView] = useState("products");
   const [selectedProductId, setSelectedProductId] = useState(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const { addToCart } = useCart();
 
   const handleViewDetails = (productId) => {
     setSelectedProductId(productId);
-    setCurrentView('detail');
+    setCurrentView("detail");
   };
   const handleSearch = (e) => {
     setSearch(e);
-    setCurrentView('products');
+    setCurrentView("products");
   };
 
   const handleBackToProducts = () => {
-    setCurrentView('products');
+    setCurrentView("products");
     setSelectedProductId(null);
   };
 
   const handleViewCart = () => {
-    setCurrentView('cart');
+    setCurrentView("cart");
   };
-const handleAddToCart = (product) => {
+  const handleAddToCart = (product) => {
     addToCart(product);
     alert(`${product.title} added to cart!`);
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+    <div style={{ minHeight: "100vh", background: "#f5f5f5" }}>
       <Navbar onViewCart={handleViewCart} />
-      <SearchBar handleSearch={handleSearch}/>
-      {currentView === 'products' && (
-        <ProductList 
-        onViewDetails={handleViewDetails}
-        search={search} />
+      <SearchBar handleSearch={handleSearch} />
+      {currentView === "products" && (
+        <ProductList onViewDetails={handleViewDetails} search={search} />
       )}
-      
-      {currentView === 'detail' && (
+
+      {currentView === "detail" && (
         <ProductDetail
           productId={selectedProductId}
           onBack={handleBackToProducts}
           onAddToCart={handleAddToCart}
         />
       )}
-      
-      {currentView === 'cart' && (
-        <Cart onClose={handleBackToProducts} />
-      )}
+
+      {currentView === "cart" && <Cart onClose={handleBackToProducts} />}
+      <BackToTop />
     </div>
   );
 }
 
-
-export default App
-
-
+export default App;
