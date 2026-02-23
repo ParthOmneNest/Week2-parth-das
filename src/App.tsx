@@ -105,20 +105,22 @@ function App() {
       />
 
       {/* Positions Table */}
-      <h2>Live Positions</h2>
+      <h2 style={{ color: '#1E40AF' }}>Live Positions</h2>
+
 
       <DataTable<Positions>
-        data={positionsData} 
+        data={positionsData}
         rowKey='id'
         onRowClick={(pos) => console.log('Position selected:', pos.symbol)}
         columns={[
-          { key: 'symbol', header: 'Symbol' },
-          { key: 'Qty', header: 'Qty' },
-          { key: 'Avg_Price', header: 'Avg. Price', render: v => `$${Number(v).toFixed(2)}` },
-          { key: 'ltp', header: 'LTP', render: v => `$${Number(v).toFixed(2)}` },
+          { key: 'symbol', header: 'Symbol', sortable: true },
+          { key: 'Qty', header: 'Qty', sortable: true },
+          { key: 'Avg_Price', header: 'Avg. Price', sortable: true, render: v => `$${Number(v).toFixed(2)}` },
+          { key: 'ltp', header: 'LTP', sortable: true, render: v => `$${Number(v).toFixed(2)}` },
           {
             key: 'pnl',
             header: 'P&L',
+            sortable: true,
             render: v => (
               <span style={{ color: Number(v) >= 0 ? 'green' : 'red', fontWeight: 'bold' }}>
                 {Number(v) >= 0 ? '+' : ''}{Number(v).toFixed(2)}
@@ -128,28 +130,26 @@ function App() {
         ]}
       />
 
+      {/* 3. Trade History Table - Added sortable to Date and Symbol */}
+      <h2 style={{ color: '#1E40AF' }}>Trade Table</h2>
 
-      {/* Generic Components — Trade table */}
-      <h2 style={{ color: '#1E40AF' }}>Trade History</h2>
       <DataTable<Trade>
         data={tradeHistory}
         rowKey='id'
         columns={[
-          { key: 'symbol', header: 'Symbol' },
+          { key: 'symbol', header: 'Symbol', sortable: true },
           {
             key: 'type', header: 'Type',
-            render: v => <strong style={{ color: v === 'BUY' ? 'green' : 'red' }}>
-              {String(v)}</strong>
+            render: v => <strong style={{ color: v === 'BUY' ? 'green' : 'red' }}>{String(v)}</strong>
           },
-          { key: 'quantity', header: 'Qty' },
+          { key: 'quantity', header: 'Qty', sortable: true },
           {
-            key: 'price', header: 'Price',
+            key: 'price', header: 'Price', sortable: true,
             render: v => `$${Number(v).toFixed(2)}`
           },
-          { key: 'date', header: 'Date' },
+          { key: 'date', header: 'Date', sortable: true },
         ]}
       />
-
       {/* Utility Types */}
       <h2 style={{ color: '#1E40AF' }}>New Trade</h2>
       <TradeForm
