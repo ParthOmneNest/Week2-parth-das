@@ -7,10 +7,10 @@ import { StockCard } from './components/StockCard'
 import { TradeForm } from './components/TradeForm'
 
 // Data
-import { positions, stocks, trades, holdings } from './data/stockData';
+import { holdings, positions, stocks, trades } from './data/stockData'
 
 // Types
-import type { Positions, Stock, Trade, Holdings } from './types/stock.types';
+import type { Holdings, Positions, Stock, Trade } from './types/stock.types'
 
 
 function App() {
@@ -49,6 +49,10 @@ function App() {
       pnl: (currentPrice - pos.investedValue) * pos.qty
     }
   })
+  const [holdingsSearch, setHoldingsSearch] = useState('');
+  const filteredHoldings = holdingsData.filter(h => 
+  h.symbol.toLowerCase().includes(holdingsSearch.toLowerCase())
+);
   // Add a new trade (receives NewTradeInput — no id/date)
   const handleNewTrade = (input: Omit<Trade, 'id' | 'date'>) => {
     const newTrade: Trade = {
@@ -140,11 +144,15 @@ function App() {
           }
         ]}
       />
-
+      {/* Search sections for holdings table */}
+      <SearchBar
+        onSearch={setHoldingsSearch}
+        placeholder='Search by symbol...'
+      />
       {/* 3. Holdings Table */}
       <h2 style={{ color: '#1E40AF' }}>Holdings</h2>
       <DataTable<Holdings>
-        data={holdingsData}
+        data={filteredHoldings}
         rowKey='id'
         onRowClick={(pos) => console.log('Holdings selected:', pos.symbol)}
         columns={[

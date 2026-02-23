@@ -2,7 +2,7 @@ import { useState } from "react"
 
 interface SearchProps{
     onSearch:(query:string)=>void
-    onFilterChange:(sector:string)=>void
+    onFilterChange?:(sector:string)=>void
     placeholder?: string
 }
 export const SearchBar:React.FC<SearchProps>=({
@@ -33,7 +33,7 @@ export const SearchBar:React.FC<SearchProps>=({
 
     // ChangeEvent for <select>
     const handleSectorChange=(e:React.ChangeEvent<HTMLSelectElement>)=>{
-        onFilterChange(e.target.value)
+        if (onFilterChange) onFilterChange(e.target.value)
     }
 
     return(
@@ -47,12 +47,14 @@ export const SearchBar:React.FC<SearchProps>=({
             />
 
             <button onClick={handleClear}>Clear</button>
-            <select onChange={handleSectorChange}>
-                <option value=''>All Sectors</option>
-                <option value='Technologyy'>Technology</option>
-                <option value='Finance'>Finance</option>
-                <option value='Automotive'>Automotive</option>
-            </select>
+            {onFilterChange && (
+                <select onChange={handleSectorChange}>
+                    <option value=''>All Sectors</option>
+                    <option value='Technologyy'>Technology</option>
+                    <option value='Finance'>Finance</option>
+                    <option value='Automotive'>Automotive</option>
+                </select>
+            )}
         </div>
     )
 }
