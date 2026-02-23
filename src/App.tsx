@@ -76,57 +76,52 @@ function App() {
 
       {/* Generic Components — Stock table */}
       <h2 style={{ color: '#1E40AF' }}>Live Quotes</h2>
-      <DataTable<Stock>
-        data={filteredStocks}
-        rowKey='id'
-        onRowClick={setSelectedStock}
-        emptyMessage='No stocks match your search.'
-        columns={[
-          { key: 'symbol', header: 'Symbol' },
-          { key: 'name', header: 'Company' },
-          {
-            key: 'price', header: 'Price',
-            render: v => `$${Number(v).toFixed(2)}`
-          },
-          {
-            key: 'changePct', header: 'Change %',
-            render: v => {
-              const n = Number(v);
-              return <span style={{ color: n >= 0 ? 'green' : 'red' }}>
-                {n >= 0 ? '+' : ''}{n.toFixed(2)}%
-              </span>;
-            }
-          },
-          {
-            key: 'volume', header: 'Volume',
-            render: v => Number(v).toLocaleString()
-          },
-        ]}
-      />
+    // Inside App.tsx return statement
 
-      {/* Positions Table */}
-      <h2>Live Positions</h2>
+{/* Generic Components — Stock table */}
+<DataTable<Stock>
+  data={filteredStocks}
+  rowKey='id'
+  onRowClick={setSelectedStock}
+  columns={[
+    { key: 'symbol', header: 'Symbol', sortable: true }, // Added sortable
+    { key: 'name', header: 'Company', sortable: true },   // Added sortable
+    {
+      key: 'price', header: 'Price', sortable: true,      // Added sortable
+      render: v => `$${Number(v).toFixed(2)}`
+    },
+    {
+      key: 'changePct', header: 'Change %', sortable: true, // Added sortable
+      render: v => {
+        const n = Number(v);
+        return <span style={{ color: n >= 0 ? 'green' : 'red' }}>
+          {n >= 0 ? '+' : ''}{n.toFixed(2)}%
+        </span>;
+      }
+    },
+    { key: 'volume', header: 'Volume' },
+  ]}
+/>
 
-      <DataTable<Positions>
-        data={positionsData} 
-        rowKey='id'
-        onRowClick={(pos) => console.log('Position selected:', pos.symbol)}
-        columns={[
-          { key: 'symbol', header: 'Symbol' },
-          { key: 'Qty', header: 'Qty' },
-          { key: 'Avg_Price', header: 'Avg. Price', render: v => `$${Number(v).toFixed(2)}` },
-          { key: 'ltp', header: 'LTP', render: v => `$${Number(v).toFixed(2)}` },
-          {
-            key: 'pnl',
-            header: 'P&L',
-            render: v => (
-              <span style={{ color: Number(v) >= 0 ? 'green' : 'red', fontWeight: 'bold' }}>
-                {Number(v) >= 0 ? '+' : ''}{Number(v).toFixed(2)}
-              </span>
-            )
-          }
-        ]}
-      />
+{/* Positions Table */}
+<DataTable<Positions>
+  data={positionsData} 
+  rowKey='id'
+  columns={[
+    { key: 'symbol', header: 'Symbol', sortable: true },
+    { key: 'Qty', header: 'Qty', sortable: true },
+    { key: 'Avg_Price', header: 'Avg. Price' ,sortable: true},
+    { key: 'ltp', header: 'LTP' ,sortable: true},
+    {
+      key: 'pnl', header: 'P&L', sortable: true, // Added sortable to track biggest gainers/losers
+      render: v => (
+        <span style={{ color: Number(v) >= 0 ? 'green' : 'red', fontWeight: 'bold' }}>
+          {Number(v) >= 0 ? '+' : ''}{Number(v).toFixed(2)}
+        </span>
+      )
+    }
+  ]}
+/>
 
 
       {/* Generic Components — Trade table */}

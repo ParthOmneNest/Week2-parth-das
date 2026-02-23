@@ -23,7 +23,7 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ availableSto
     })
 
     const [selectedSector, setSelectedSector] = useState<string>('All')
-    const [sortBy, setSortBy] = useState<'price' | 'change' | 'volume'>('price')
+    // const [sortBy, setSortBy] = useState<'price' | 'change' | 'volume'>('price')
 
     useEffect(() => {
         setTimeout(() => {
@@ -44,12 +44,12 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ availableSto
         ? portfolio.holdings
         : portfolio.holdings.filter(s => s.sector === selectedSector)
 
-    const sortedAndFiltered = [...filteredStocks].sort((a, b) => {
-    if (sortBy === 'price') return b.price - a.price;
-    if (sortBy === 'change') return b.change - a.change;
-    // Add volume if it exists on your Stock type
-    return 0;
-});
+//     const sortedAndFiltered = [...filteredStocks].sort((a, b) => {
+//     if (sortBy === 'price') return b.price - a.price;
+//     if (sortBy === 'change') return b.change - a.change;
+//     // Add volume if it exists on your Stock type
+//     return 0;
+// });
 
         if(portfolio.isLoading) return<p>Loading portfolio...</p>
         if(portfolio.error) return<p>Error: {portfolio.error}</p>
@@ -70,7 +70,7 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ availableSto
             </select>
 
             <ul>
-                {sortedAndFiltered.map((s)=>(
+                {filteredStocks.map((s)=>(
                     <li key={s.id}>{s.symbol}: ${s.price.toFixed(2)} </li>
                 ))}
             </ul>
