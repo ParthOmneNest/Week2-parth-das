@@ -22,17 +22,23 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ availableSto
         error: null,
     })
 
-    const [selectedSector, setSelectedSector] = useState<string>('All')
+    const [selectedSector, setSelectedSector] = useState<string>('')
     // const [sortBy, setSortBy] = useState<'price' | 'change' | 'volume'>('price')
 
     useEffect(() => {
         setTimeout(() => {
-            const topThree = availableStocks.slice(0, 3)
-            const totalValue = topThree.reduce((sum, s) => sum + s.price * 10, 0)
-            const totalCost = topThree.reduce((sum, s) => sum + (s.price - s.change) * 10, 0)
+            // Pick top 3 from each major sector: indices 0-2, 20-22, 40-42
+            const diverseHoldings = [
+                ...availableStocks.slice(0, 3),
+                ...availableStocks.slice(20, 23),
+                ...availableStocks.slice(40, 43)
+            ].filter(Boolean)
+            
+            const totalValue = diverseHoldings.reduce((sum, s) => sum + s.price * 10, 0)
+            const totalCost = diverseHoldings.reduce((sum, s) => sum + (s.price - s.change) * 10, 0)
 
             setPortfolio({
-                holdings: topThree,
+                holdings: diverseHoldings,
                 totalValue,
                 gainLoss: totalValue - totalCost,
                 isLoading: false,
@@ -40,7 +46,7 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ availableSto
             })
         }, 800)
     }, [availableStocks])
-    const filteredStocks = selectedSector === 'All'
+    const filteredStocks = selectedSector === ''
         ? portfolio.holdings
         : portfolio.holdings.filter(s => s.sector === selectedSector)
 
@@ -63,10 +69,10 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ availableSto
 
             <select value={selectedSector}
             onChange={(e)=>setSelectedSector(e.target.value)}>
-                <option>All</option>
-                <option>Technology</option>
-                <option>Finance</option>
-                <option>Automotive</option>
+                <option value=''>All</option>
+                <option value='Technology'>Technology</option>
+                <option value='Finance'>Finance</option>
+                <option value='Automotive'>Automotive</option>
             </select>
 
             <ul>

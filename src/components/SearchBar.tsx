@@ -50,7 +50,7 @@ export const SearchBar:React.FC<SearchProps>=({
             {onFilterChange && (
                 <select onChange={handleSectorChange}>
                     <option value=''>All Sectors</option>
-                    <option value='Technologyy'>Technology</option>
+                    <option value='Technology'>Technology</option>
                     <option value='Finance'>Finance</option>
                     <option value='Automotive'>Automotive</option>
                 </select>

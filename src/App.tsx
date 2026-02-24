@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import React, { lazy, useState } from 'react';
 import './App.css'
 import { DataTable } from './components/DataTable'
+import { Pagination } from './components/Pagination'
 import { PortfolioSummary } from './components/PortfolioSummary'
 import { SearchBar } from './components/SearchBar'
 import { StockCard } from './components/StockCard'
