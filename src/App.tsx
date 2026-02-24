@@ -5,7 +5,8 @@ import './App.css';
 
 // Data
 import { SuspenseBoundary } from './boundaries/SuspenseBoundary';
-import { holdings, positions, stocks, trades } from './data/stockData';
+import MarketTicker from './components/MarketTicker';
+import { holdings, marketIndices, positions, stocks, trades } from './data/stockData';
 
 //skeleton
 import { CardGridSkeleton } from './skeletons/CardGridSkeleton';
@@ -64,7 +65,8 @@ function App() {
     });
   }
   return(
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: 24, fontFamily: 'Arial, sans-serif' }}>
+    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 24px 24px', fontFamily: 'Arial, sans-serif' }}>
+      <MarketTicker indices={marketIndices} />
       <h1 style={{ color: '#1E3A8A' }}>Stock Market Dashboard</h1>
  
       {/* ── FEATURE 1: Live Quotes — uses BOTH skeletons ── */}

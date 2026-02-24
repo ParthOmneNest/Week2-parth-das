@@ -1,4 +1,4 @@
-import type { Holding, Position, Stock, Trade } from '../types/stock.types';
+import type { Holding, MarketIndex, Position, Stock, Trade } from '../types/stock.types';
 
 export const positions: Position[] = [
     // --- Existing 1-10 (Technology, Finance, Automotive) ---
@@ -260,5 +260,16 @@ export const holdings: Holding[] = [
         currentValue: 1625.00,
         totalReturn: 100.00
     }
+];
+
+export const marketIndices: MarketIndex[] = [
+    { id: 'i1', symbol: 'NIFTY 50', price: 22123.45, change: -12.30, changePct: -0.06 },
+    { id: 'i2', symbol: 'SENSEX', price: 72890.12, change: 145.67, changePct: 0.20 },
+    { id: 'i3', symbol: 'NIFTY BANK', price: 46789.00, change: -89.45, changePct: -0.19 },
+    { id: 'i4', symbol: 'NASDAQ', price: 15980.30, change: 210.15, changePct: 1.33 },
+    { id: 'i5', symbol: 'S&P 500', price: 5088.80, change: 45.20, changePct: 0.89 },
+    { id: 'i6', symbol: 'DOW JONES', price: 39131.50, change: 62.40, changePct: 0.16 },
+    { id: 'i7', symbol: 'FINNIFTY', price: 20567.80, change: -23.10, changePct: -0.11 },
+    { id: 'i8', symbol: 'NIFTY NEXT 50', price: 58900.25, change: 312.40, changePct: 0.53 },
 ];
 

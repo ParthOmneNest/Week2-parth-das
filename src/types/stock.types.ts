@@ -44,3 +44,11 @@ export interface Holding{
     totalReturn:number,
     
 }
+
+export interface MarketIndex {
+  id: string;
+  symbol: string;
+  price: number;
+  change: number;
+  changePct: number;
+}
