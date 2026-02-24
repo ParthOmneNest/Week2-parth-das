@@ -251,6 +251,14 @@ export const holdings: Holding[] = [
         investedValue: 1300.00,
         currentValue: 2059.10,
         totalReturn: 759.10
+    },
+    {
+        id: 'h6',
+        symbol: 'GOOGL',
+        qty: 5,
+        investedValue: 1525.00,
+        currentValue: 1625.00,
+        totalReturn: 100.00
     }
 ];
 
