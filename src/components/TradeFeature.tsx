@@ -21,7 +21,8 @@ export const TradeFeature: React.FC<TradeFeatureProps> = ({
 }) => {
 
     // NEW: get the slice of items + ref + flag from the hook
-    const { visibleItems, bottomRef, hasMore } = useInfiniteScroll(tradeHistory, 10);
+const { visibleItems, bottomRef, hasMore } = useInfiniteScroll(tradeHistory, 10);
+
 
     return (
         <>
@@ -56,29 +57,21 @@ export const TradeFeature: React.FC<TradeFeatureProps> = ({
             />
 
             {/* NEW: the sentinel div — observer watches this */}
-            <div
-                ref={bottomRef}
-                style={{
-                    height: "30px", // Slightly taller for better detection
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '10px 0'
-                }}
-            >
-                {hasMore ? (
-                    /* A small loading spinner or dots feels more "infinite" than text */
-                    <div className="loader-dots" style={{ color: '#6B7280' }}>
-                        ••• Loading more trades •••
-                    </div>
-                ) : (
-                    tradeHistory.length > 0 && (
-                        <span style={{ color: '#9CA3AF', fontSize: '12px' }}>
-                            ✓ All {tradeHistory.length} trades loaded
-                        </span>
-                    )
-                )}
-            </div>
+      {/* NEW: the sentinel div — observer watches this */}
+      <div ref={bottomRef} style={{ height: 1 }} />
+ 
+      {/* NEW: status messages */}
+      {hasMore && (
+        <p style={{ textAlign: 'center', color: '#6B7280', padding: '8px 0' }}>
+          Scroll down to see more trades...
+        </p>
+      )}
+      {hasMore === false && tradeHistory.length > 0 && (
+        <p style={{ textAlign: 'center', color: '#9CA3AF', padding: '8px 0' }}>
+          All {tradeHistory.length} trades loaded
+        </p>
+      )}
+
 
             {/* Trade form is unchanged */}
             <h2 style={{ color: '#1E40AF', marginTop: 32 }}>Place a Trade</h2>

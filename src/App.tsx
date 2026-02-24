@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import './App.css'
 import { DataTable } from './components/DataTable'
 import { PortfolioSummary } from './components/PortfolioSummary'
 import { SearchBar } from './components/SearchBar'
 import { StockCard } from './components/StockCard'
-import { TradeForm } from './components/TradeForm'
+// import { TradeForm } from './components/TradeForm'
 
 // Data
 import { holdings, positions, stocks, trades } from './data/stockData'
@@ -12,21 +12,25 @@ import { holdings, positions, stocks, trades } from './data/stockData'
 // Types
 import type { Holdings, Positions, Stock, Trade } from './types/stock.types'
 import { TradeFeature } from './components/TradeFeature'
+import LiveQuotesFeature from './features/quotes/LiveQuotes'
+import { PositionsFeature } from './components/PositionsFeature'
 
 
 function App() {
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sectorFilter, setSectorFilter] = useState('');
+  const [sectorFilter, setSectorFilter] = useState('All');
   const [tradeHistory, setTradeHistory] = useState<Trade[]>(trades);
 
   // Filter stocks based on search and sector
-  const filteredStocks = stocks.filter(s => {
-    const matchesSearch = s.symbol.toLowerCase().includes(searchQuery.toLowerCase())
-      || s.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesSector = !sectorFilter || s.sector === sectorFilter;
-    return matchesSearch && matchesSector;
-  });
+  const filteredStocks = useMemo(() => {
+    return stocks.filter(s => {
+      const matchesSearch = s.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+        || s.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSector = sectorFilter === 'All' || !sectorFilter || s.sector === sectorFilter;
+      return matchesSearch && matchesSector;
+    });
+  }, [searchQuery, sectorFilter]);
 
   // map the matching stocks for Positions sections
   const positionsData = positions.map((pos) => {
@@ -77,7 +81,7 @@ function App() {
 
       {/* Typing Props */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
-        {filteredStocks.map(stock => (
+        {filteredStocks.slice(0,6).map(stock => ( // show 1st 6 stocks
           <StockCard
             key={stock.id}
             stock={stock}
@@ -92,7 +96,7 @@ function App() {
 
       {/* Generic Components — Stock table */}
       <h2 style={{ color: '#1E40AF' }}>Live Quotes</h2>
-      <DataTable<Stock>
+      {/* <DataTable<Stock>
         data={filteredStocks}
         rowKey='id'
         onRowClick={setSelectedStock}
@@ -118,12 +122,20 @@ function App() {
             render: v => Number(v).toLocaleString()
           },
         ]}
+      /> */}
+
+        <LiveQuotesFeature 
+        stocks={filteredStocks}
+        selectedStock={selectedStock}
+        onSelectStock={setSelectedStock}
+        onSearch={setSearchQuery}
+        onFilterChange={setSectorFilter}
       />
 
       {/* Positions Table */}
       <h2 style={{ color: '#1E40AF' }}>Live Positions</h2>
 
-
+{/* 
       <DataTable<Positions>
         data={positionsData}
         rowKey='id'
@@ -144,6 +156,13 @@ function App() {
             )
           }
         ]}
+      /> */}
+
+      {/* FEATURE 2: Infinite Scrolling Positions*/}
+      <PositionsFeature 
+        positions={positionsData}
+        // stocks={stocks}
+        // selectedStock={selectedStock}
       />
       {/* Search sections for holdings table */}
       <SearchBar
