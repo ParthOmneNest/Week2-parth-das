@@ -11,6 +11,7 @@ import { holdings, positions, stocks, trades } from './data/stockData'
 
 // Types
 import type { Holdings, Positions, Stock, Trade } from './types/stock.types'
+import { TradeFeature } from './components/TradeFeature'
 
 
 function App() {
@@ -50,9 +51,9 @@ function App() {
     }
   })
   const [holdingsSearch, setHoldingsSearch] = useState('');
-  const filteredHoldings = holdingsData.filter(h => 
-  h.symbol.toLowerCase().includes(holdingsSearch.toLowerCase())
-);
+  const filteredHoldings = holdingsData.filter(h =>
+    h.symbol.toLowerCase().includes(holdingsSearch.toLowerCase())
+  );
   // Add a new trade (receives NewTradeInput — no id/date)
   const handleNewTrade = (input: Omit<Trade, 'id' | 'date'>) => {
     const newTrade: Trade = {
@@ -175,9 +176,11 @@ function App() {
       {/* 4. Trade History Table - Added sortable to Date and Symbol */}
       <h2 style={{ color: '#1E40AF' }}>Trade Table</h2>
 
-      <DataTable<Trade>
+      {/* <DataTable<Trade>
         data={tradeHistory}
         rowKey='id'
+        filterKey='symbol'
+        searchQuery={searchQuery}
         columns={[
           { key: 'symbol', header: 'Symbol', sortable: true },
           {
@@ -193,11 +196,17 @@ function App() {
         ]}
       />
       {/* Utility Types */}
-      <h2 style={{ color: '#1E40AF' }}>New Trade</h2>
+      {/*<h2 style={{ color: '#1E40AF' }}>New Trade</h2>
       <TradeForm
         stocks={stocks}
         onSubmitTrade={handleNewTrade}
         initialValues={selectedStock ?? {}}
+      /> */}
+      <TradeFeature
+        tradeHistory={tradeHistory}
+        stocks={stocks}
+        selectedStock={selectedStock}
+        onSubmitTrade={handleNewTrade}
       />
     </div>
   );

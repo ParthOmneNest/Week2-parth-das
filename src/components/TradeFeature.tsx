@@ -1,0 +1,94 @@
+import React from 'react';
+import type { Trade, Stock } from '../types/stock.types';
+import { DataTable } from './DataTable';
+import { TradeForm } from './TradeForm';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll'; // New file
+
+type NewTradeInput = Omit<Trade, 'id' | 'date'>;
+
+interface TradeFeatureProps {
+    tradeHistory: Trade[];
+    stocks: Stock[];
+    selectedStock: Stock | null;
+    onSubmitTrade: (input: NewTradeInput) => void;
+}
+
+export const TradeFeature: React.FC<TradeFeatureProps> = ({
+    tradeHistory,
+    stocks,
+    selectedStock,
+    onSubmitTrade,
+}) => {
+
+    // NEW: get the slice of items + ref + flag from the hook
+    const { visibleItems, bottomRef, hasMore } = useInfiniteScroll(tradeHistory, 10);
+
+    return (
+        <>
+            <h2 style={{ color: '#1E40AF', marginTop: 32 }}>
+                Trade History
+                <span style={{ fontSize: 14, fontWeight: 'normal', color: '#6B7280', marginLeft: 12 }}>
+                    {visibleItems.length} of {tradeHistory.length} shown
+                </span>
+            </h2>
+
+            {/* data={visibleItems} is the only change inside DataTable */}
+            <DataTable<Trade>
+                data={visibleItems}
+                rowKey="id"
+                filterKey="symbol"
+                columns={[
+                    { key: 'symbol', header: 'Symbol', sortable: true },
+                    {
+                        key: 'type', header: 'Type',
+                        render: function (value) {
+                            const colour = value === 'BUY' ? '#166534' : '#991B1B';
+                            return <strong style={{ color: colour }}>{String(value)}</strong>;
+                        }
+                    },
+                    { key: 'quantity', header: 'Qty', sortable: true },
+                    {
+                        key: 'price', header: 'Price', sortable: true,
+                        render: function (value) { return '$' + Number(value).toFixed(2); }
+                    },
+                    { key: 'date', header: 'Date', sortable: true },
+                ]}
+            />
+
+            {/* NEW: the sentinel div — observer watches this */}
+            <div
+                ref={bottomRef}
+                style={{
+                    height: "30px", // Slightly taller for better detection
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '10px 0'
+                }}
+            >
+                {hasMore ? (
+                    /* A small loading spinner or dots feels more "infinite" than text */
+                    <div className="loader-dots" style={{ color: '#6B7280' }}>
+                        ••• Loading more trades •••
+                    </div>
+                ) : (
+                    tradeHistory.length > 0 && (
+                        <span style={{ color: '#9CA3AF', fontSize: '12px' }}>
+                            ✓ All {tradeHistory.length} trades loaded
+                        </span>
+                    )
+                )}
+            </div>
+
+            {/* Trade form is unchanged */}
+            <h2 style={{ color: '#1E40AF', marginTop: 32 }}>Place a Trade</h2>
+            <TradeForm
+                stocks={stocks}
+                onSubmitTrade={onSubmitTrade}
+                initialValues={selectedStock ?? {}}
+            />
+
+
+        </>
+    );
+};
