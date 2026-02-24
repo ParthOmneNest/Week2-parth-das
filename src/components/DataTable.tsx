@@ -17,6 +17,7 @@ interface DataTableProps<T extends object> {
     emptyMessage?: string,
     filterKey?: keyof T,
     searchQuery?:string,
+    pageSize?: number; 
 }
 
 

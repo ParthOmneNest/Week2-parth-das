@@ -25,7 +25,7 @@ export interface Portfolio{
     holdings:Stock[]
 }
 
-export interface Positions{
+export interface Position{
     id:string
     symbol:string,
     Qty:number,
@@ -34,7 +34,7 @@ export interface Positions{
     pnl:number,
 }
 
-export interface Holdings{
+export interface Holding{
     id:string,
     symbol:string,
     qty:number,
