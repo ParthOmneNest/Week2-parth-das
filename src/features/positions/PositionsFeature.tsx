@@ -1,6 +1,6 @@
 import React from 'react';
+import { DataTable } from '../../components/DataTable';
 import type { Position } from '../../types/stock.types';
-import {DataTable }   from '../../components/DataTable';
  
 interface PositionsFeatureProps {
   positions: Position[];
@@ -32,11 +32,12 @@ const PositionsFeature: React.FC<PositionsFeatureProps> = ({ positions }) => {
         data={positions}
         rowKey="id"
         filterKey="symbol"
+        enableInfiniteScroll={true}
         pageSize={10}
         columns={[
           { key: 'symbol',   header: 'Symbol',    sortable: true },
-          { key: 'qty',      header: 'Qty',       sortable: true },
-          { key: 'avgPrice', header: 'Avg Price', sortable: true,
+          { key: 'Qty',      header: 'Qty',       sortable: true },
+          { key: 'Avg_Price', header: 'Avg Price', sortable: true,
             render: function(value) { return '$' + Number(value).toFixed(2); }
           },
           { key: 'ltp',      header: 'LTP',       sortable: true,
@@ -46,7 +47,10 @@ const PositionsFeature: React.FC<PositionsFeatureProps> = ({ positions }) => {
             render: function(value) { return pnlCell(value); }
           },
           { key: 'pnlPct', header: 'P&L %', sortable: true,
-            render: function(value) { return pnlCell(value, '%'); }
+            render: function(_value, row) { 
+              const calculatedPct = (row.pnl / (row.Qty * row.Avg_Price)) * 100;
+              return pnlCell(calculatedPct, '%'); 
+            }
           },
         ]}
       />

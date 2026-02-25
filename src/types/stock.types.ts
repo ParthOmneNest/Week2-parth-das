@@ -32,6 +32,7 @@ export interface Position{
     Avg_Price:number,
     ltp:number,
     pnl:number,
+    pnlPct?:number,
 }
 
 export interface Holding{
@@ -42,4 +43,12 @@ export interface Holding{
     currentValue:number,
     totalReturn:number,
     
+}
+
+export interface MarketIndex {
+  id: string;
+  symbol: string;
+  price: number;
+  change: number;
+  changePct: number;
 }

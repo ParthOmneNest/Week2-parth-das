@@ -1,7 +1,9 @@
-import React from 'react';
-import type { Trade, Stock } from '../../types/stock.types';
-import {DataTable }       from '../../components/DataTable';
-import{ TradeForm  }      from '../../components/TradeForm';
+import React, { lazy, Suspense } from 'react';
+import { DataTable } from '../../components/DataTable';
+import { TradeForm } from '../../components/TradeForm';
+import type { Position, Stock, Trade } from '../../types/stock.types';
+
+const PositionsFeature = lazy(() => import('../positions/PositionsFeature'));
  
 // Trade but WITHOUT id and date (the form user hasn't submitted yet)
 type NewTradeInput = Omit<Trade, 'id' | 'date'>;
@@ -11,6 +13,7 @@ interface TradeFeatureProps {
   stocks:        Stock[];
   selectedStock: Stock | null;
   onSubmitTrade: (input: NewTradeInput) => void;
+  positions:     Position[];
 }
  
 const TradeFeature: React.FC<TradeFeatureProps> = ({
@@ -18,14 +21,21 @@ const TradeFeature: React.FC<TradeFeatureProps> = ({
   stocks,
   selectedStock,
   onSubmitTrade,
+  positions
 }) => {
   return (
     <>
+      <h2 style={{ color: '#1E40AF', marginTop: 32 }}>Your Current Positions</h2>
+      <Suspense fallback={<p>Loading positions...</p>}>
+        <PositionsFeature positions={positions} />
+      </Suspense>
+
       <h2 style={{ color: '#1E40AF', marginTop: 32 }}>Trade History</h2>
       <DataTable<Trade>
         data={tradeHistory}
         rowKey="id"
         filterKey="symbol"
+        enableInfiniteScroll={true}
         pageSize={10}
         columns={[
           { key: 'symbol',   header: 'Symbol',  sortable: true },

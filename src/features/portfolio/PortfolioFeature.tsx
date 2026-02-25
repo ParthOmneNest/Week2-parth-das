@@ -1,6 +1,6 @@
 import React from 'react';
-import { Stock }         from '../../types/stock.types';
-import PortfolioSummary  from '../../components/PortfolioSummary';
+import { PortfolioSummary } from '../../components/PortfolioSummary';
+import type { Stock } from '../../types/stock.types';
  
 interface PortfolioFeatureProps {
   availableStocks: Stock[];  // passed straight through to PortfolioSummary
