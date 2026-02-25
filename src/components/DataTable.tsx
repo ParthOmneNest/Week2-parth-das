@@ -15,6 +15,9 @@ interface DataTableProps<T extends object> {
     rowKey: keyof T,
     onRowClick?: (row: T) => void,
     emptyMessage?: string,
+    filterKey?: keyof T,
+    searchQuery?:string,
+    pageSize?: number; 
 }
 
 
@@ -23,7 +26,10 @@ export const DataTable = <T extends object>({
     columns,
     rowKey,
     onRowClick,
-    emptyMessage = 'No data found'
+    emptyMessage = 'No data found',
+    filterKey,
+    searchQuery
+ 
 }: DataTableProps<T>) => {
     // 1. State: Tracks which column is active and the direction (asc/desc)
     const [sortConfig, setSortConfig] = useState<{ key: keyof T; direction: 'asc' | 'desc' } | null>(null);
@@ -36,13 +42,22 @@ export const DataTable = <T extends object>({
         }
         setSortConfig({ key, direction });
     };
-
-    // 3. Sorting Logic: Memoized to prevent re-sorting on every render
+       // 3.1. First, Filter the data
+    const filteredData = useMemo(() => {
+        if (!filterKey || !searchQuery) return data;
+        
+        return data.filter((item) => 
+            String(item[filterKey])
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
+        );
+    }, [data, filterKey, searchQuery]);
+    // 3.2. Sorting Logic: Memoized to prevent re-sorting on every render
     const sortedData = useMemo(() => {
         // If no sort is selected, return the original data
-        if (!sortConfig) return data;
+        if (!sortConfig) return filteredData;
 
-        return [...data].sort((a, b) => {
+        return [...filteredData].sort((a, b) => {
             const aVal = a[sortConfig.key];
             const bVal = b[sortConfig.key];
 
@@ -58,9 +73,9 @@ export const DataTable = <T extends object>({
             }
             return 0;
         });
-    }, [data, sortConfig]);
+    }, [filteredData, sortConfig]);
 
-    if (data.length === 0) return <p>{emptyMessage}</p>
+    if (sortedData.length === 0) return <p>{emptyMessage}</p>
     return (
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
