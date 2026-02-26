@@ -84,6 +84,6 @@ export const TradeForm: React.FC<TradeFormProps>=({
 
             <p>Price: ${form.price.toFixed(2)} | Total: ${(form.price * form.quantity).toFixed(2)}</p>
             <button type='submit' disabled={!form.symbol}>Submit Trade</button>
-        </form>
+        </form> 
     )
 }

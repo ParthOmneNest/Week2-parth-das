@@ -12,9 +12,9 @@ import { DataTable } from '../../components/DataTable';
 import { useHoldingStore } from '../../stores/useHoldingStore';
 import type { Holding } from '../../types/stock.types';
 
-interface HoldingsFeatureProps {
-  holdings: Holding[];
-}
+// interface HoldingsFeatureProps {
+//   holdings: Holding[];
+// }
 
 // Premium Color Palette for the Pie Chart
 const COLORS = [
@@ -41,11 +41,12 @@ function pnlCell(value: unknown, suffix: string = ''): React.ReactNode {
   );
 }
 
-const HoldingsFeature: React.FC<HoldingsFeatureProps> = ({ holdings }) => {
+const HoldingsFeature: React.FC = () => {
 
   // 1. Get the toggle functions from your store
-  const { toggleCompare, isInCompare } = useHoldingStore(
+  const {holdings, toggleCompare, isInCompare } = useHoldingStore(
     useShallow((state) => ({
+      holdings:state.allHoldings,
       toggleCompare: state.toggleCompare,
       isInCompare: state.isInCompare,
       _listVersion: state.compareList.length 

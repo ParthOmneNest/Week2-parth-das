@@ -1,11 +1,12 @@
 import React from 'react';
-import type { MarketIndex } from '../types/stock.types';
+import { useMarketStore } from '../stores/useMarketStore';
 
-interface MarketTickerProps {
-  indices: MarketIndex[];
-}
+// interface MarketTickerProps {
+//   indices: MarketIndex[];
+// }
 
-const MarketTicker: React.FC<MarketTickerProps> = ({ indices }) => {
+const MarketTicker: React.FC = () => {
+  const indices=useMarketStore((state)=>state.indices)
   // We double the data to create a seamless infinite loop
   const tickerItems = [...indices, ...indices];
 
