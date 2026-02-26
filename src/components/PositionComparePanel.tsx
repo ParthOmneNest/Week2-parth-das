@@ -26,32 +26,32 @@ const POSITION_ROWS: {
   key: keyof Position;
   format?: (v: any) => string;
 }[] = [
-  {
-    label: 'Qty',
-    key: 'Qty',
-    format: (v) => Number(v).toLocaleString(),
-  },
-  {
-    label: 'Avg Price',
-    key: 'Avg_Price',
-    format: (v) => '$' + Number(v).toFixed(2),
-  },
-  {
-    label: 'LTP',
-    key: 'ltp',
-    format: (v) => '$' + Number(v).toFixed(2),
-  },
-  {
-    label: 'P&L',
-    key: 'pnl',
-    format: (v) => (Number(v) >= 0 ? '+' : '') + '$' + Number(v).toLocaleString(),
-  },
-  {
-    label: 'P&L %',
-    key: 'pnl' as any, // We calculate this row
-    format: (v) => (v ? (Number(v) >= 0 ? '+' : '') + Number(v).toFixed(2) + '%' : '0.00%'),
-  },
-];
+    {
+      label: 'Qty',
+      key: 'Qty',
+      format: (v) => Number(v).toLocaleString(),
+    },
+    {
+      label: 'Avg Price',
+      key: 'Avg_Price',
+      format: (v) => '$' + Number(v).toFixed(2),
+    },
+    {
+      label: 'LTP',
+      key: 'ltp',
+      format: (v) => '$' + Number(v).toFixed(2),
+    },
+    {
+      label: 'P&L',
+      key: 'pnl',
+      format: (v) => (Number(v) >= 0 ? '+' : '') + '$' + Number(v).toLocaleString(),
+    },
+    {
+      label: 'P&L %',
+      key: 'pnl' as any, // We calculate this row
+      format: (v) => (v ? (Number(v) >= 0 ? '+' : '') + Number(v).toFixed(2) + '%' : '0.00%'),
+    },
+  ];
 
 export const PositionComparePanel: React.FC = () => {
   const { compareList, clearCompare, toggleCompare } = usePositionStore(
@@ -84,8 +84,8 @@ export const PositionComparePanel: React.FC = () => {
             {compareList.map((pos) => (
               <th key={pos.id} style={panelStyles.thContent}>
                 <div>{pos.symbol}</div>
-                <button 
-                  onClick={() => toggleCompare(pos)} 
+                <button
+                  onClick={() => toggleCompare(pos)}
                   style={panelStyles.removeBtn}
                 >✕</button>
               </th>
@@ -97,7 +97,9 @@ export const PositionComparePanel: React.FC = () => {
             // Optimization: Calculate max/min for the row once
             const values = compareList.map(pos => {
               if (row.label === 'P&L %') {
-                return (pos.pnl / (pos.Qty * pos.Avg_Price)) * 100;
+                const pnl = pos.pnl ?? 0; // Fallback to 0 if undefined
+                const invested = (pos.Qty ?? 0) * (pos.Avg_Price ?? 0);
+                return invested === 0 ? 0 : (pnl / invested) * 100;
               }
               return Number(pos[row.key]) || 0;
             });
@@ -109,14 +111,16 @@ export const PositionComparePanel: React.FC = () => {
                 <td style={panelStyles.tdLabel}>{row.label}</td>
                 {compareList.map((pos) => {
                   let rawValue = pos[row.key];
-                  
+
                   if (row.label === 'P&L %') {
-                    rawValue = (pos.pnl / (pos.Qty * pos.Avg_Price)) * 100;
+                    const pnl = pos.pnl ?? 0;
+                    const invested = (pos.Qty ?? 0) * (pos.Avg_Price ?? 0);
+                    rawValue = invested === 0 ? 0 : (pnl / invested) * 100;
                   }
 
                   const numValue = Number(rawValue) || 0;
                   const isPnlRow = row.key === 'pnl' || row.label === 'P&L %';
-                  
+
                   // Highlight Green for Max
                   const isBest = numValue === maxVal && maxVal !== minVal;
                   const isWorst = isPnlRow && numValue === minVal && numValue < 0;

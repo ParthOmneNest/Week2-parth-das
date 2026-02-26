@@ -31,7 +31,7 @@ export interface Position{
     Qty:number,
     Avg_Price:number,
     ltp:number,
-    pnl:number,
+    pnl?:number,
     pnlPct?:number,
 }
 
